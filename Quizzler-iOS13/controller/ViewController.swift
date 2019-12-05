@@ -47,7 +47,7 @@ class ViewController: UIViewController {
     }
     
     func nextQuestion(){
-        if step + 1 < questions.list.count{
+        if step < questions.list.count - 1{
             step += 1
             questionLabel.text = questions.list[step].question
         }else {
@@ -56,11 +56,15 @@ class ViewController: UIViewController {
     }
     
     func restart(){
-        let alert = UIAlertController(title: "No questions left.", message: "Do you want to restart ?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Restart", style: .default, handler: { (UIAlertAction) in
-            self.nextQuestion()
-        }))
-        present(alert, animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            let alert = UIAlertController(title: "No questions left.", message: "Do you want to restart ?", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Restart", style: .default, handler: { (UIAlertAction) in
+                self.step = 0
+                self.nextQuestion()
+            }))
+            self.present(alert, animated: true, completion: nil)
+        })
+        
     }
     
     
