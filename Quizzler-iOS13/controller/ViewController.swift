@@ -13,13 +13,13 @@ class ViewController: UIViewController {
     var pickedAnswer : Bool?
     var step = 0
     @IBOutlet weak var questionLabel: UILabel!
-    
+    @IBOutlet weak var progressBar: UIProgressView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        questionLabel.text = questions.list[step].question
+        nextQuestion()
         
     }
 
@@ -30,25 +30,28 @@ class ViewController: UIViewController {
             pickedAnswer = false
         }
         checkAnswer()
-        
+        step += 1
+        nextQuestion()
     }
     
     func checkAnswer(){
         if pickedAnswer == questions.list[step].answer {
             let alert = UIAlertController(title: "Good Job!", message: "Answer was right.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Next", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: {
+                self.dismiss(animated: true, completion: nil)
+            })
         }else {
             let alert = UIAlertController(title: "Oopss!", message: "Answer was worng!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Next", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: {
+                self.dismiss(animated: true, completion: nil)
+            })
         }
-        nextQuestion()
+        
     }
     
     func nextQuestion(){
-        if step < questions.list.count - 1{
-            step += 1
+        updateUI()
+        if step < questions.list.count {
             questionLabel.text = questions.list[step].question
         }else {
             restart()
@@ -65,6 +68,9 @@ class ViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         })
         
+    }
+    func updateUI(){
+        progressBar.progress = Float(step) / Float(questions.list.count)
     }
     
     
